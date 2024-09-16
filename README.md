@@ -7,11 +7,20 @@ These analyses should replicated the primary findings in the manuscript by Galer
 
 ## Scripts:
 
-* [Binned Fishers test](https://github.com/galerp/Cube3/blob/main/scripts/fisher_dx_binned.R) - finds clinical associations with genes prior to diagnosis ("note elimination") in 3 month time bins.
-* [Random Forest Models](https://github.com/galerp/Cube3/blob/main/scripts/rf_dx_model.R) - trains and tests Random Forest models to predict SCN1A, bootstrapping at every age interval.
-* [HPO Propagation](https://github.com/galerp/Cube3/blob/main/additional_analyses/compose_prop.R)  - propagates a base HPO file, including all ancestors of each HPO in every time bin.
+* [Main R Functions](https://github.com/galerp/scalp_EEG_DEE/tree/main/scripts/main_R_functions.R) - Main R functions used throughout many of the scripts.
+  
+* [PDR Analysis](https://github.com/galerp/scalp_EEG_DEE/tree/main/scripts/PDR_compare.R) - extracts posterior dominant rhythms (PDR) from controls and compares it to clinician annotated PDR. Trains models using each source of PDR to predict age of the individual and compares the accuracy.
+  
+* [Alpha-Delta Ratio Analyses](https://github.com/galerp/scalp_EEG_DEE/tree/main/scripts/alpha_delta_tests.R)  - Compares the alpha-delta ratio across different gene groups and compared to controls.
+  
+* [Gene Prediction](https://github.com/galerp/scalp_EEG_DEE/tree/main/scripts/gene_prediction.R))  - Trains and tests random forest models using spatial and non-spatial spectral features from EEG to differentiate controls from specific gene populations. Also trains and tests and three-class model with all three gene groups.
 
+* [Gene Prediction](https://github.com/galerp/scalp_EEG_DEE/tree/main/scripts/gene_prediction.R))  - Trains and tests random forest models using spatial and non-spatial spectral features from EEG to differentiate controls from specific gene populations. Also trains and tests and three-class model with all three gene groups.
 
+* [Seizure Frequency Prediction](https://github.com/galerp/scalp_EEG_DEE/tree/main/scripts/seiz_freq_pred.R)  - Trains and tests random forest models using spectral features from EEG to predict seizure frequency of individuals.
+
+* [GMFM Prediction](https://github.com/galerp/scalp_EEG_DEE/tree/main/scripts/GMFM_prediction.R))  - Trains and tests random forest models using spectral features from EEG to predict gross motor function measure (GMFM) scores. Results are compared agains a null model trained on just age of the individual at the time of the GMFM.
+  
 ## Files: ##
 
 [hpo def](https://github.com/galerp/Cube3/blob/main/Files/HPO_def_rl_2020-10-12_dl_2021-08-03.csv) - This file contains every HPO code along with its definition.
