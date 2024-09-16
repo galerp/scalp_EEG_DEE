@@ -25,7 +25,6 @@ EEG cleaning and extraction of spectral features and posterior dominant rhythm w
 * [EEG Cleaning and Spectral Extraction](https://github.com/galerp/scalp_EEG_DEE/tree/main/scripts/python_functions)  - This file contains the main python functions used to clean and extract spectral features from the scalp EEGs.
   
 ## Files: ##
-pdr_controls_auto_vs_clin.csv
 
 * [Controls' PDR](https://github.com/galerp/scalp_EEG_DEE/tree/main/data/pdr_controls_auto_vs_clin.csv)  - This file contains the output from our posterior dominant rhythm (PDR) detector across EEG epochs (prior to additionial filters) and the PDR annotated by clincians on the same respective EEG.
 
