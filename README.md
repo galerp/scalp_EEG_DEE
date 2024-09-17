@@ -14,14 +14,12 @@ EEG cleaning and extraction of spectral features and posterior dominant rhythm w
   
 * [Alpha-Delta Ratio Analyses](https://github.com/galerp/scalp_EEG_DEE/tree/main/scripts/alpha_delta_tests.R)  - Compares the alpha-delta ratio across different gene groups and compared to controls.
   
-* [Gene Prediction](https://github.com/galerp/scalp_EEG_DEE/tree/main/scripts/gene_prediction.R)  - Trains and tests random forest models using spatial and non-spatial spectral features from EEG to differentiate controls from specific gene populations. Also trains and tests and three-class model with all three gene groups.
-
 * [Gene Prediction](https://github.com/galerp/scalp_EEG_DEE/tree/main/scripts/gene_prediction.R) - Trains and tests random forest models using spatial and non-spatial spectral features from EEG to differentiate controls from specific gene populations. Also trains and tests and three-class model with all three gene groups.
-
+  
 * [Seizure Frequency Prediction](https://github.com/galerp/scalp_EEG_DEE/tree/main/scripts/seiz_freq_pred.R)  - Trains and tests random forest models using spectral features from EEG to predict seizure frequency of individuals.
-
+  
 * [GMFM Prediction](https://github.com/galerp/scalp_EEG_DEE/tree/main/scripts/GMFM_prediction.R)  - Trains and tests random forest models using spectral features from EEG to predict gross motor function measure (GMFM) scores. Results are compared agains a null model trained on just age of the individual at the time of the GMFM.
-
+  
 * [EEG Cleaning and Spectral Extraction](https://github.com/galerp/scalp_EEG_DEE/tree/main/scripts/python_functions)  - This file contains the main python functions used to clean and extract spectral features from the scalp EEGs.
   
 ## Files: ##
@@ -49,4 +47,6 @@ library(pbkrtest)
 7. [caret](https://cran.r-project.org/web/packages/caret/index.html)
 8. [gamm4](https://cran.r-project.org/web/packages/gamm4/index.html)
 9. [pbkrtest](https://cran.r-project.org/web/packages/pbkrtest/index.html)
-
+10. [FSA](https://cran.r-project.org/web/packages/FSA/index.html)
+11. [ggpubr](https://cran.r-project.org/web/packages/ggpubr/index.html)
+12. [mgcv](https://cran.r-project.org/web/packages/mgcv/index.html)
