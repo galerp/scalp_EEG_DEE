@@ -1,28 +1,22 @@
-###################
+####
 # Description: 
 # This file creates the random forest models to predict seizure frequency. 
 # These results are seen in Figure 5 of Galer et al.
 # Note, results may differ very slightly due to the slight randomness of random 
 # forest models
-###################
-
-
-# Set working directory
-setwd("/Volumes/helbig_lab/Users/galerp/EEG/manuscript/github/")
+####
 
 # Loads primary functions
-source("main_R_functions.R")
+source("scripts/main_R_functions.R")
 
 
 
-###########
-# Load Data
-###########
+#### Load Data ####
 # Spectral information for every electrode
 
 # Create wide format, remove unnecessary columns, convert outcome to binary
 # Note all of the patients have a known or presumed genetic epilepsy roughly defined here as "DEE"
-full_seiz_psd <- read_csv("/Volumes/helbig_lab/Users/galerp/EEG/manuscript/github/data/psd_bp_seiz_freq.csv") %>% 
+full_seiz_psd <- read_csv("data/psd_bp_seiz_freq.csv") %>% 
   pivot_wider(names_from = feature, values_from = med_feat,
               names_prefix = "", id_cols = c(patient, age, seiz_age,seiz_freqs)) %>% 
   # This can be manipulated based on how you want to split categories
@@ -34,9 +28,9 @@ full_seiz_psd <- read_csv("/Volumes/helbig_lab/Users/galerp/EEG/manuscript/githu
   mutate(seiz_binary = as.factor(seiz_binary))
 
 
-###############
-# Histogram
-###############
+
+##### Histogram -----
+
 ordered_features <- c(">1 per day",">1 per week",">1 per month",">1 per 6 months",'>1 per 1 year',"1-2 years ago", ">2 years ago")
 
 
@@ -44,9 +38,8 @@ ordered_features <- c(">1 per day",">1 per week",">1 per month",">1 per 6 months
 full_seiz_psd$seiz_freqs <- factor(full_seiz_psd$seiz_freqs, levels = ordered_features)
 
 
-####
-# All DEEs
-####
+
+#### All DEEs ####
 seiz_wide_cnt = full_seiz_psd %>% 
   count(seiz_freqs)
 seiz_wide_cnt$seiz_freqs <- factor(seiz_wide_cnt$seiz_freqs, levels = ordered_features)
@@ -64,15 +57,9 @@ ggplot(seiz_wide_cnt, aes(seiz_freqs, n))+
     axis.title.x = element_blank()  # Remove x-axis title
   )
 
-# ggsave("seiz_hist_DEE_pats.png",width = 5, height = 5, dpi = 1000)
+ggsave("seiz_hist_DEE_pats.png",width = 5, height = 5, dpi = 1000)
 
-
-
-
-
-################################
-# Random Forest Model
-################################
+#### Random Forest Model ####
 
 
 train_sz_freq <- full_seiz_psd %>% 
@@ -99,14 +86,11 @@ if (length(unique(control_match$patient)) != nrow(control_match)) {
 }
 
 
-
 # Combine "Controls" with "Gene"
 train_sz_freq <- df_gene %>% 
   rbind(control_match)
 
-############
-# Performing LOOCV
-############
+#### Performing LOOCV ####
 sz_freq_results <- seizfreq_rf_loocv(train_sz_freq)
 
 
@@ -173,8 +157,6 @@ roc_data_rf_null <- roc(sz_freq_results_rf_null$actual_outcome, sz_freq_results_
 auc_value <- auc(roc_data_rf_null)
 print(auc_value)
 
-
-
 ggroc(roc_data_rf,
       legacy.axes = TRUE, size = 1, alpha =1, color = "maroon")+
   geom_abline(linetype = "dashed") +
@@ -192,5 +174,4 @@ ggroc(roc_data_rf,
     text = element_text(size = 12),axis.text = element_text(size = 12)
   )
 
-# ggsave("/seiz_rf_loocv_ROC_sz_freq.png",width = 5.1, height = 5, dpi = 1000)
-
+ggsave("seiz_rf_loocv_ROC_sz_freq.png",width = 5.1, height = 5, dpi = 1000)
