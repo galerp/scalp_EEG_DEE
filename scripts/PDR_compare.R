@@ -1,27 +1,27 @@
-###################
+# These are packages only required for this R script
+library(mgcv) #to create GAMM models
+
+####
 # Description: 
 # This file compares the ability of clinician annotated Posterior Dominant Rhythm
 # (PDR) vs automatically detected PDR to predict the age of individuals from our
 # control cohort. We fit GAMs to predict age of an individual based on their PDR.
 # This script reproduces results seen in Figure 2 of Galer et al.
 
-###################
+####
 
 
 # Set working directory
-setwd("/Volumes/helbig_lab/Users/galerp/EEG/manuscript/github/")
 
 # Loads primary functions
-source("main_R_functions.R")
+source("scripts/main_R_functions.R")
 
 # PDR information from clinicians (clin_dom_freq) and the various detected PDR
 # via our automated method across iterations (frequency)
 pdr_comb <- read_csv("data/pdr_controls_auto_vs_clin.csv")
 
 
-##########
-# Use filters to find median automatically detected PDR
-##########
+#### Use filters to find median automatically detected PDR ####
 
 control_pdr_auto <- pdr_comb %>% 
   filter(frequency<=14) %>% 
@@ -41,11 +41,8 @@ control_pdr_auto <- pdr_comb %>%
   rename(auto_freq = frequency)
 
 
+#### Compare PDRs ####
 
-#######################
-# Compare PDRs
-#######################
-library(ggpubr)
 pdr_med <- control_pdr_auto %>% 
   select(patient, auto_freq) %>% 
   distinct() %>% 
@@ -78,11 +75,9 @@ ggplot(pdr_med, aes(x = clin_dom_freq, y = auto_freq)) +
   theme(axis.text=element_text(size=12),
         axis.title=element_text(size=14))
 
-# ggsave("PDR_manual_vs_clinician_cor.png",width = 6.5, height = 6, dpi = 1000)
+ggsave("PDR_manual_vs_clinician_cor.png",width = 6.5, height = 6, dpi = 1000)
 
-###########
-# Turn into long format
-###########
+#### Transform data into long format ####
 
 pdr_long <- pdr_med %>%
   pivot_longer(
@@ -95,14 +90,8 @@ pdr_long$Method[pdr_long$Method=="auto_freq"] = "Automated"
 
 
 
-#########################
-# Train Models
-#########################
-
-
-####################
-# Model permutations
-####################
+#### Train Models ####
+##### Model permutations -----
 
 pdr_auto <- pdr_long %>% 
   filter(Method == "Automated")
@@ -117,7 +106,6 @@ results_auto_df <- data.frame()
 
 # How large training set it
 ntrain = round(length(unique(pdr_long$patient))*0.8)  
-
 
 # Perform 1000 permutations with 80-20 training-testing split
 for (i in 1:1000) {
@@ -175,9 +163,9 @@ results_dif <- results_clin_df %>%
 
 
 
-######
-# Find iteration with median RMSE difference
-######
+
+##### Find iteration with median RMSE difference ####
+
 rmse_dif_med <- results_dif %>% 
   mutate(dif_RMSE_med = abs(dif_RMSE-median(results_dif$dif_RMSE))) %>% 
   arrange(dif_RMSE_med) %>% 
@@ -185,10 +173,7 @@ rmse_dif_med <- results_dif %>%
 
 iter_rmse_dif_med <- rmse_dif_med$Iteration[1]
 
-####################
-# Plot results
-####################
-
+##### Plot results -----
 
 # Mean squared Error
 ggplot(results_dif, aes(auto_MSE, clin_MSE))+
@@ -240,7 +225,7 @@ ggplot(results_long, aes(x = Model, y = RMSE, group = Iteration)) +
   
   geom_line(data = results_long %>% filter(Iteration == iter_rmse_dif_med),
             aes(x = Model, y = RMSE),
-            color = "red3", size = 1.5, alpha = 0.6)+
+            color = "red3", linewidth = 1.5, alpha = 0.6)+
   ylab("RMSE")+
   theme_minimal() +
   scale_color_manual(values = c("Automated" = "#F8726A", "Clinician" = "turquoise3"))+
@@ -248,6 +233,3 @@ ggplot(results_long, aes(x = Model, y = RMSE, group = Iteration)) +
 
 
 ggsave("PDR_manual_vs_clin_RMSE_dot_line.png", width = 6, height = 5.5, dpi = 1000)
-
-
-
