@@ -7,9 +7,7 @@ library(caret)
 library(randomForest)
 library(pROC)
 
-#################################################################
-# Age matching Function
-#################################################################
+##### Age matching Function #####
 
 
 # This function performs age matching from a disease cohort "df_gene" and a 
@@ -65,12 +63,8 @@ find_age_matched_controls <- function(df_gene, df_control) {
   return(matched_control_rows)
 }
 
-#################################################################
 
-#################################
-# RANDOM FOREST
-#################################
-
+##### RANDOM FOREST #####
 
 # This function trains random forest models for every gene in a dataframe.
 # It first uses the find_age_matched_controls to perform age matching for 
@@ -90,7 +84,7 @@ find_age_matched_controls <- function(df_gene, df_control) {
 # This handles if it is taking in data that just has age as a feature
 
 rf_gene_control <- function(data_pretrain) {
-
+  
   if(length(data_pretrain)>4){
     allfeats = data_pretrain[,5:length(data_pretrain)]
     nfeats = length(allfeats)
@@ -169,9 +163,7 @@ rf_gene_control <- function(data_pretrain) {
 
 
 
-########
-# Seizure frequence Random forest with LOOCV
-########
+##### Seizure frequence Random forest with LOOCV #####
 
 # Assumes balanced dataset
 seizfreq_rf_loocv <- function(train_df) {
@@ -199,15 +191,13 @@ seizfreq_rf_loocv <- function(train_df) {
     names(cur_df) <- c("age_eeg", "patient","prediction_prob", "prediction", "actual_outcome")
     cur_df$Iteration <- i
     
-    ##############
-    # Null models
-    ##############
+    #####  Null models ----
     null_model <- randomForest(seiz_binary ~ age, data = training %>% select(age, seiz_binary), ntree = 500, importance = TRUE)
     null_predictions_prob <- predict(null_model, newdata = testing %>% select(age), type = "prob")[,2]
     null_predictions <- as.numeric(null_predictions_prob > 0.5)
     
-    ###############
-    ###############
+    
+    ##### ----
     null_cur_df <- cbind(null_predictions_prob, null_predictions) %>% as.data.frame()
     
     names(null_cur_df) <- c("null_prediction_prob", "null_prediction")
@@ -224,10 +214,7 @@ seizfreq_rf_loocv <- function(train_df) {
 
 
 
-
-########
-# GMFM Random forest with bootstraping
-########
+##### GMFM Random forest with bootstraping #####
 
 # This function trains random forest models predicting GMFM scores.
 # It runs 1000 bootstraps wiht an 80/20 training-testing split. It trains and
@@ -248,7 +235,7 @@ seizfreq_rf_loocv <- function(train_df) {
 # This handles if it is taking in data that just has age as a feature
 
 gmfm_rf <- function(train_df) {
-
+  
   
   results_df <- data.frame()
   null_results_df <- data.frame()
@@ -269,16 +256,15 @@ gmfm_rf <- function(train_df) {
     importance_vals <- importance(rf_model) %>% as.data.frame()
     feat_import <- as.data.frame(t(importance_vals$IncNodePurity))
     names(feat_import) = rownames(importance_vals)
-    ##############
-    # Null models
-    ##############
+
+    #### Null models ----
+
     # linear_model <- lm(MEAS_VALUE ~ age_test, data = training)
     # null_predictions <- predict(linear_model, newdata = testing %>% select(age_test), type = "response")
     null_model <- randomForest(MEAS_VALUE ~ ., data = training %>% select(age_test, MEAS_VALUE), ntree = 500, importance = TRUE)
     null_predictions <- predict(null_model, newdata = testing %>% select(age_test), type = "response")
     
-    ###############
-    ###############
+    #### ----
     
     
     actual <- testing$MEAS_VALUE
