@@ -3,18 +3,15 @@ library(gamm4) #to create GAMM models
 library(pbkrtest) #to test fit difference between GAMMs
 library(FSA) #for Dunn test
 
-###################
+####
 # Description: 
 # This file plots alpha-delta ratio between genes and variants and performs the 
 # relavent statistical analyses. This code should reproduce results from Figure 2.
 
-###################
-
-# Set working directory
-setwd("/Volumes/helbig_lab/Users/galerp/EEG/manuscript/github/")
+####
 
 # Loads primary functions
-source("main_R_functions.R")
+source("scripts/main_R_functions.R")
 
 # Spectral information for every electrode
 psd_bp_rel <- read_csv("data/psd_bp_gene_controls.csv")
@@ -22,25 +19,22 @@ psd_bp_rel <- read_csv("data/psd_bp_gene_controls.csv")
 # STXBP1 variant information
 stx_vars <- read_csv("data/stxbp1_var_type.csv")
 
-####################
-# Median Across Scalp
-####################
+
+#### Median Across Scalp ####
 
 psd_bp_rel_pat <- psd_bp_rel %>% 
   group_by(patient, age, age_group, gene, bandpower) %>% 
   dplyr::summarise(Power = median(power)) %>% 
   filter(age_group !="Neonates")
 
-####################
-# Alpha-delta ratio 
-####################
+
+#### Alpha-delta ratio ####
 
 psd_bp_ad_rat <- psd_bp_rel_pat %>% 
   filter(bandpower == "alpha_delta")
 
-####################
-# Alpha-delta ratio by STXBP1 Variant
-####################
+
+#### Alpha-delta ratio by STXBP1 Variant ####
 psd_bp_ad_vars <- psd_bp_ad_rat %>% 
   left_join(stx_vars)%>%
   mutate(var_group = case_when(gene=="Controls"~"Controls",
@@ -68,12 +62,10 @@ ggplot(psd_bp_ad_vars %>%
   theme(axis.text=element_text(size=12),
         axis.title=element_text(size=14))
 # 
-# ggsave("alpha_delta_stx_var_wide.png",  width = 9, height = 4.5, dpi=1000)
+ggsave("alpha_delta_stx_var_wide.png",  width = 9, height = 4.5, dpi=1000)
 
 
-######
-# Now test if significant with GAMM test
-######
+#### Now test if significant with GAMM test ####
 
 psd_stx <- psd_bp_ad_vars %>%
   filter(gene =="STXBP1")
@@ -90,10 +82,9 @@ model_1 <- gamm4(Power ~ s(age) + var_group, data = psd_stx, random = ~(1|patien
 KRmodcomp(model_1$mer,model_0$mer)$test$p.value[1]
 
 
-####################
-# Now alpha-delta difference between genes
-## By age group
-####################
+#### Now alpha-delta difference between genes ####
+
+##### By age group -----
 
 psd_bp_ad_rat$gene <- factor(psd_bp_ad_rat$gene, 
                              levels=c("Controls", "SCN1A", "SYNGAP1","STXBP1"))
@@ -122,9 +113,8 @@ ggplot(psd_bp_ad_rat %>% filter(age<=21), aes(age_group, Power))+
 # 
 ggsave("alpha_delta_all_age_boxplot_21y.png", width=9.5, height = 6, dpi = 1000)
 
-#####
-# Test statistical difference between genes by age group
-#####
+##### Test statistical difference between genes by age group -----
+
 # Computing Dunn test with Benjamini-Hochberg correction and computing Cohen's d
 
 # For Genes
@@ -136,8 +126,6 @@ psd_bp_ad_rat_dunn <- psd_bp_ad_rat %>%
   #Triple checking
   filter(age_group !="Neonates") %>% 
   filter(age<=21)
-
-
 
 for (a in unique(psd_bp_ad_rat_dunn$age_group)) {
   psd_sub <- psd_bp_ad_rat_dunn %>%
@@ -187,5 +175,3 @@ for (a in unique(psd_bp_ad_rat_dunn$age_group)) {
 }
 
 print(med_dunn_test)
-
-
