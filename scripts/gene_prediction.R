@@ -658,7 +658,9 @@ sample_and_split <- function(data) {
   )
 }
 set.seed(123)  # For reproducibility
-results_df <- list()  # To store results from each iteration
+
+# To store results from each iteration
+results_df <- list()
 importance_df <- list()
 
 #Set number of bootstraps
@@ -738,6 +740,25 @@ for (i in 1:n_bootstraps) {
 # Combine all results into a single data frame
 final_results_df <- bind_rows(results_df)
 final_importance_df <- bind_rows(importance_df)
+
+###############
+# Overall Accuracy
+###############
+# Calculate accuracy for each iteration
+accuracy_results <- final_results_df %>%
+  group_by(Iteration) %>%
+  summarise(
+    main_model_acc = mean(prediction == actual_outcome),  # Accuracy of the primary model
+    null_model_acc = mean(null_prediction == actual_outcome)  # Accuracy of the null model
+  )
+
+# Calculate the median accuracy across all bootstraps for primary model and null model
+median_main_accuracy <- median(accuracy_results$main_model_acc)
+median_null_accuracy <- median(accuracy_results$null_model_acc)
+
+# Print the median accuracy 
+print(paste("Median accuracy for primary model:", median_main_accuracy))
+print(paste("Median accuracy for null model:", median_null_accuracy))
 
 
 ###############
@@ -833,42 +854,11 @@ ggplot(mean_conf_df, aes(Prediction, Actual, fill = Mean)) +
     axis.title.x = element_blank()  # Optionally remove x-axis title
   )
 
-ggsave("All_gene_3x_RF_model_conf_matrix_labels_perc.png",width = 6.3, height = 5, dpi = 1000)
-
-ggplot(mean_conf_df, aes(Prediction, Actual, fill = Mean)) +
-  geom_tile() +
-  # geom_text(aes(label = sprintf("%.2f\n[%.2f, %.2f]", Mean, CI_lower, CI_upper)), size = 3) +
-  scale_fill_gradient(low = "white", high = "dodgerblue2") +
-  labs(title = "Average Confusion Matrix with 95% CI", x = "Predicted Class", y = "Actual Class") +
-  theme_minimal()+
-  theme(
-    text = element_text(size = 14),
-    axis.text = element_text(size = 12),
-    axis.title.x = element_blank()  # Remove x-axis title
-  )
-
-ggsave("All_gene_3x_RF_model_conf_matrix_No_labels_perc.png",width = 6.3, height = 5, dpi = 1000)
-
-
+# ggsave("All_gene_3x_RF_model_conf_matrix_labels_perc.png",width = 6.3, height = 5, dpi = 1000)
 
 ####################
 # Feature Importance
 ####################
-
-
-results_long_pre <- final_importance_df %>%
-  mutate(across(.cols = -gene, .fns = ~ as.numeric(as.character(.)))) %>% 
-  mutate(age = as.numeric(age)) %>%
-  select(-c(hit,FP, TP, TN, FN)) %>% 
-  pivot_longer(
-    cols = -c(1:6), # Keep the first 4 columns fixed; adjust the number if needed
-    names_to = "features", # Name of the column to store the original column names
-    values_to = "weights"  # Name of the column to store the values
-  ) %>% 
-  mutate(features = gsub("Beta Theta","Beta-Theta",features)) %>% 
-  mutate(features = gsub("Alpha Delta","Alpha-Delta",features)) %>% 
-  mutate(features = gsub("Alpha Theta","Alpha-Theta",features)) 
-
 
 final_importance_df$Iteration <- seq(1, 1000, 1)
 importance_max <- final_importance_df %>% 
@@ -949,5 +939,5 @@ ggplot(all_features, aes(features, normalized_weight))+
     axis.title.x = element_blank()  # Remove x-axis title
   )
 
-ggsave("All_gene_3x_RF_model_weights_ALL_FEATS_GINI.png",width = 6, height = 5, dpi = 1000)
+# ggsave("All_gene_3x_RF_model_weights_ALL_FEATS_GINI.png",width = 6, height = 5, dpi = 1000)
 
