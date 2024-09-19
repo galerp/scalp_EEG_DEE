@@ -16,14 +16,35 @@ source("main_R_functions.R")
 
 # Spectral information for every electrode
 
-sd_bp_rel_gmfm <-  read_csv("data/psd_bp_GMFM.csv")
+psd_bp_rel_gmfm <-  read_csv("data/psd_bp_GMFM.csv")
+
+# Find median for each feature at each lobe
+psd_bp_rel_lobe <- psd_bp_rel_gmfm %>% 
+  filter(electrode %nin% c("A1","A2")) %>% 
+  group_by(patient, MEAS_VALUE, age_test, age_eeg, age_group,lobe, bandpower, epochs) %>% 
+  dplyr::summarise(med_feat = median(power)) %>% 
+  mutate(feature = paste(bandpower, lobe, sep = "_")) %>% 
+  mutate(feature = gsub("_power_rel","",feature)) %>% 
+  mutate(feature = gsub("Frontal","Frnt",feature)) %>% 
+  mutate(feature = gsub("Occipital","Occ",feature)) %>% 
+  mutate(feature = gsub("Temporal","Tmp",feature)) %>% 
+  mutate(feature = gsub("Central","Cnt",feature)) %>% 
+  mutate(feature = gsub("Parietal","Par",feature)) %>% 
+  select(-lobe) 
+
+
+# Convert to wide format
+psd_rel_rat_wide <- psd_bp_rel_lobe %>%
+  pivot_wider(names_from = feature, values_from = med_feat,
+              names_prefix = "", id_cols = c(patient, MEAS_VALUE,age_test,age_eeg, age_group, epochs))
 
 ######################
 # Train and Test
 ######################
-train_df <- psd_bp_rel_gmfm %>%
+train_df <- psd_rel_rat_wide %>%
   filter(epochs>=15) %>% 
-  select(-epochs) 
+  select(-c(patient, epochs, age_eeg, age_group)) %>% 
+  ungroup()
 
 # Note this can take 10-20 minutes to run
 rf_results <- gmfm_rf(train_df)
@@ -40,15 +61,15 @@ t.test(rf_comp$mae_dif,rf_comp$dif_comp,alternative = "greater")
 t.test(rf_comp$rmse_dif,rf_comp$dif_comp,alternative = "greater")
 
 # Calculate additional statistics
-# Mean differences
-mean_mae_dif <- mean(rf_comp$mae_dif)
-mean_rmse_diff <- mean(rf_comp$rmse_dif)
-# Mean null performance
-null_mae <- mean(rf_comp$null_mae)
-null_rmse <- mean(rf_comp$null_rmse)
-# Mean EEG performance
-null_mae <- mean(rf_comp$mae)
-null_rmse <- mean(rf_comp$rmse)
+# median differences
+median_mae_dif <- median(rf_comp$mae_dif)
+median_rmse_diff <- median(rf_comp$rmse_dif)
+# median null performance
+null_mae <- median(rf_comp$null_mae)
+null_rmse <- median(rf_comp$null_rmse)
+# median EEG performance
+eeg_mae <- median(rf_comp$mae)
+eeg_rmse <- median(rf_comp$rmse)
 
 
 #############
