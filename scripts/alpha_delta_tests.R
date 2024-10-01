@@ -6,15 +6,15 @@ library(FSA) #for Dunn test
 ###################
 # Description: 
 # This file plots alpha-delta ratio between genes and variants and performs the 
-# relavent statistical analyses. This code should reproduce results from Figure 2.
+# relevant statistical analyses. This code should reproduce results from Figure 2.
 
 ###################
 
 # Set working directory
-setwd("/Volumes/helbig_lab/Users/galerp/EEG/manuscript/github/")
+setwd("/Volumes/helbig_lab/Users/galerp/EEG/manuscript/scalp_EEG_DEE/")
 
 # Loads primary functions
-source("main_R_functions.R")
+source("scripts/main_R_functions.R")
 
 # Spectral information for every electrode
 psd_bp_rel <- read_csv("data/psd_bp_gene_controls.csv")
@@ -67,7 +67,7 @@ ggplot(psd_bp_ad_vars %>%
   theme_classic()+ 
   theme(axis.text=element_text(size=12),
         axis.title=element_text(size=14))
-# 
+
 # ggsave("alpha_delta_stx_var_wide.png",  width = 9, height = 4.5, dpi=1000)
 
 
@@ -119,8 +119,8 @@ ggplot(psd_bp_ad_rat %>% filter(age<=21), aes(age_group, Power))+
   theme_classic() + 
   scale_color_manual(values = my_colors)+
   theme(text = element_text(size = 14),axis.text = element_text(size = 14))
-# 
-ggsave("alpha_delta_all_age_boxplot_21y.png", width=9.5, height = 6, dpi = 1000)
+ 
+# ggsave("alpha_delta_all_age_boxplot_21y.png", width=9.5, height = 6, dpi = 1000)
 
 #####
 # Test statistical difference between genes by age group

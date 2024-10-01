@@ -2,19 +2,19 @@
 # Description: 
 # This file creates the random forest models to predict both genes from controls
 # and genes from each other. These results are seen in Figure 4 of Galer et al.
-# Note, results may differ very slightly due to randomness of random forest models.
-# e.g., the top 8 features may shift slightly in order (ordered by median), 
-# but should stay the same. Also, note LOOCV with close age matching and 1:1 ratio
+# Note, results may differ very slightly due to the stochastic nature of random 
+# forest models. For example the top 8 features may shift slightly in order 
+# (ordered by median). Also, note LOOCV with close age matching and 1:1 ratio
 # between both classes results in perfect or near perfect AUCs for models trained on 
 # only age due to majority class prediction (AUC prediction probability is flipped).
 
 ###################
 
 # Set working directory
-setwd("/Volumes/helbig_lab/Users/galerp/EEG/manuscript/github/")
+setwd("/Volumes/helbig_lab/Users/galerp/EEG/manuscript/scalp_EEG_DEE/")
 
 # Loads primary functions
-source("main_R_functions.R")
+source("scripts/main_R_functions.R")
 
 # Spectral information for every electrode
 psd_bp_rel <- read_csv("data/psd_bp_gene_controls.csv")
@@ -133,16 +133,6 @@ data_pretrain = feat_all_wide %>%
 
 results_all_rf <- rf_gene_control(data_pretrain)
 
-################
-# Age Null Model
-################
-
-data_pretrain = feat_age_wide %>%
-  ungroup() 
-
-results_control_rf <- rf_gene_control(data_pretrain)
-
-
 ####################################
 # STXBP1 Results
 ####################################
@@ -159,11 +149,11 @@ stx_f1 = (2 * stx_precision * stx_recall)/(stx_precision+stx_recall)
 
 print(paste0("Accuracy: ", stx_accuracy))
 
-print(paste0("Precision: ",stx_precision ))
+print(paste0("Precision: ", stx_precision))
 
-print(paste0("Recall: ",stx_recall ))
+print(paste0("Recall: ", stx_recall))
 
-print(paste0("F1: ",stx_f1 ))
+print(paste0("F1: ", stx_f1))
 
 
 ######
@@ -939,5 +929,5 @@ ggplot(all_features, aes(features, normalized_weight))+
     axis.title.x = element_blank()  # Remove x-axis title
   )
 
-# ggsave("All_gene_3x_RF_model_weights_ALL_FEATS_GINI.png",width = 6, height = 5, dpi = 1000)
+# ggsave("All_gene_3x_RF_model_weights_all_feats_gini.png",width = 6, height = 5, dpi = 1000)
 
