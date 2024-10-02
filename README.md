@@ -32,15 +32,14 @@ EEG cleaning and extraction of spectral features and posterior dominant rhythm w
 
 * [Controls' PDR](https://github.com/galerp/scalp_EEG_DEE/tree/main/data/pdr_controls_auto_vs_clin.csv)  - This file contains the output from our posterior dominant rhythm (PDR) detector across EEG epochs (prior to additionial filters) and the PDR annotated by clincians on the same respective EEG.
 
-* [Main Cohort Spectral Features](https://github.com/galerp/scalp_EEG_DEE/tree/main/data/psd_bp_gene_controls.csv)  - This file contains the relevant spectral features for each electrode across the main cohorts, _STXBP1_, _SYNGAP1_, _SCN1A_, and _Controls_. Features are the median of each electrode across all available EEG epochs.
+* [Main Cohort Spectral Features](https://github.com/galerp/scalp_EEG_DEE/tree/main/data/psd_bp_gene_controls.csv)  - This file contains the relevant spectral features for each electrode across the main cohorts, _STXBP1_, _SYNGAP1_, _SCN1A_, and Controls. Features are the median of each electrode across all available EEG epochs.
 
 * [STXBP1 Variant Types](https://github.com/galerp/scalp_EEG_DEE/tree/main/data/stxbp1_var_type.csv)  - This file contains the broad category of variant type (protien truncating variant (PTV) vs missense variant) in individuals with a variant in _STXBP1_ in our cohort.
 
 * [Seizure Frequency Spectral Features](https://github.com/galerp/scalp_EEG_DEE/tree/main/data/psd_bp_seiz_freq.csv)  - This file contains the relevant spectral features and respective seizure frequency for all individuals in the seizure frequency analyses.
 
 * [GMFM Spectral Features](https://github.com/galerp/scalp_EEG_DEE/tree/main/data/psd_bp_GMFM.csv)  - This file contains the relevant spectral features and respective gross motor function measure (GMFM) score for all individuals in the GMFM analyses.
-library(gamm4)
-library(pbkrtest)
+
 
 ### R Requirements:
   [R](https://www.r-project.org/) with the following packages:
