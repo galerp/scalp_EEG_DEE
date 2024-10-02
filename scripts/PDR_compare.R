@@ -45,7 +45,6 @@ control_pdr_auto <- pdr_comb %>%
 #######################
 # Compare PDRs
 #######################
-library(ggpubr)
 pdr_med <- control_pdr_auto %>% 
   select(patient, auto_freq) %>% 
   distinct() %>% 

@@ -1,7 +1,11 @@
 # Scalp EEG Analysis in Childhood Genetic Epilepsies
 
 
+<<<<<<< HEAD
 This repository is composed of a series of scripts which analyzes the spectral features from from 1957 EEGs from 1585 individuals ages 0.03-38.68 years (median 7.23 years, IQR 2.61-12.37 years). Most analyses cover three genetic epilepsies and a large control cohort: _STXBP1_ (95 EEGs from 20 individuals, ages 0.16-17.77 years), _SCN1A_ (154 EEGs from 68 individuals, ages 0.30-24.62 years), _SYNGAP1_ (46 EEGs from 21 individuals, ages 1.19-27.47 years), and controls (847 EEGs from 806 individuals, ages 0.03-38.68 years). There are also two additionial cohorts: individuals with a scalp EEG and a seizure frequency annotation collected close in time (440 EEGs from 354 individuals, ages 1.59-20.03 years) and individuals with a scalp EEG and gross motor function assessment (GMFM) collected close in time (400 EEGs from 340 individual, ages 0.64 to 22.18 years).
+=======
+This repository is composed of a series of scripts which analyzes the spectral features from 2036 clinical scalp EEGs from 1957 EEGs from 1585 individuals ages 0.03-38.68 years (median 7.23 years, IQR 2.61-12.37 years). Most analyses cover three genetic epilepsies and a large control cohort: _STXBP1_ (95 EEGs from 20 individuals, ages 0.16-17.77 years), _SCN1A_ (154 EEGs from 68 individuals, ages 0.30-24.62 years), _SYNGAP1_ (46 EEGs from 21 individuals, ages 1.19-27.47 years), and controls (847 EEGs from 806 individuals, ages 0.03-38.68 years). There are also two additionial cohorts: individuals with a scalp EEG and a seizure frequency annotation collected close in time (440 EEGs from 354 individuals, ages 1.59-20.03 years) and individuals with a scalp EEG and gross motor function assessment (GMFM) collected close in time (400 EEGs from 340 individual, ages 0.64 to 22.18 years).
+>>>>>>> dd59bd414da017d7ef0cf3367eabb72c3ff4c0d7
 These analyses should replicated the primary findings in the manuscript by Galer et al. "Quantitative EEG Spectral Features Differentiate Genetic Epilepsies and Predict Neurologic Outcomes".
 EEG cleaning and extraction of spectral features and posterior dominant rhythm were computed in Python. Downstream analyses including machine learning models and statistical analyses were computed in R.
 
