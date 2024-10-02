@@ -25,7 +25,7 @@ EEG cleaning and extraction of spectral features and posterior dominant rhythm w
 
 * [EEG Cleaning and Spectral Extraction](https://github.com/galerp/scalp_EEG_DEE/tree/main/scripts/python_functions) - This file contains the main python functions used to clean and extract spectral features from the scalp EEGs.
 
-* [EEG Cleaning and Spectral Extraction Walkthrough] (https://github.com/galerp/scalp_EEG_DEE/blob/main/scripts/eeg_psd_wt.ipynb) -  This is a jupyter notebook which walks through the basic steps of cleaning an EEG file, removing artifact-heavy epochs, and extracting the power spectral density of each electrode. It requires example data that can be retrieved here: https://upenn.box.com/v/galerqeegcntrleg
+* [EEG Cleaning and Spectral Extraction Walkthrough](https://github.com/galerp/scalp_EEG_DEE/blob/main/scripts/eeg_psd_wt.ipynb) -  This is a jupyter notebook which walks through the basic steps of cleaning an EEG file, removing artifact-heavy epochs, and extracting the power spectral density of each electrode. It requires example data that can be retrieved here: https://upenn.box.com/v/galerqeegcntrleg
   
 ## Files: ##
 
