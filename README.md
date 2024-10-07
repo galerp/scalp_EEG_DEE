@@ -60,4 +60,5 @@ These scripts use [Python](https://www.python.org/) 3.9.13. The following third-
 2.  [pandas](https://pandas.pydata.org/docs/)
 3.  [mne](https://mne.tools/stable/index.html)
 4.  [mne_icalabel](https://mne.tools/mne-icalabel/stable/index.html)
+5.  [matplotlib](https://matplotlib.org/stable/index.html)
 
