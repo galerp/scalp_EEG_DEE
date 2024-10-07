@@ -55,8 +55,8 @@ An example EEG deidentified file from a control patient in our cohort can be ret
 10. [mgcv](https://cran.r-project.org/web/packages/mgcv/index.html)
 
 ### Python Dependencies:
-These scripts use Python 3.9.13. The following third-party packages are required to run the Python scripts:
-1.  [scipy](https://docs.scipy.org/doc/scipy/reference/signal.html](https://docs.scipy.org/doc/scipy/)
+These scripts use [Python](https://www.python.org/) 3.9.13. The following third-party packages are required to run the Python scripts:
+1.  [scipy](https://docs.scipy.org/doc/scipy/)
 2.  [pandas](https://pandas.pydata.org/docs/)
 3.  [mne](https://mne.tools/stable/index.html)
 4.  [mne_icalabel](https://mne.tools/mne-icalabel/stable/index.html)
