@@ -1,23 +1,15 @@
-from scipy.stats import zscore, kurtosis, skew
-from itertools import combinations,repeat
+from itertools import repeat
 import os
-import scipy
-from scipy.signal import firwin, filtfilt, hilbert, coherence, welch, savgol_filter, find_peaks
-import itertools
-
 import scipy.signal as sig
 import numpy as np
 import pandas as pd
 import mne
 from mne.preprocessing import ICA
 from mne_icalabel import label_components
-import multiprocessing
-# import tools
 import math
 from os import listdir
 from os.path import isfile, join
-import datetime
-from fooof import FOOOF
+
 
 
 ################################################
@@ -992,7 +984,7 @@ def find_spectral_peaks(frequencies, power_db_smooth, fs):
 
     distance = int(0.5 / (fs / nfft))  # This simplifies to 2 as calculated
 
-    peaks, properties = find_peaks(power_db_smooth, prominence=5, distance=distance, width=0, height=None)
+    peaks, properties = sig.find_peaks(power_db_smooth, prominence=5, distance=distance, width=0, height=None)
 
     # Ensure all properties have the same length, pad with NaNs if necessary
     max_length = len(peaks)
@@ -1206,7 +1198,6 @@ def get_savgol_pdr_peaks(edf_file, ica = True, target_sf = 200, nfft=0.25):
                     'power_db_smooth': pwr_db_smooth  # Smoothed power in dB
                 })
 
-            # power_db_smooth = savgol_filter(power_db, window_length=25, polyorder=3)
             peak_results = find_spectral_peaks(frequencies, power_db_smooth, sf)
 
             # Assuming that the necessary libraries are already imported and setup is done
@@ -1230,6 +1221,40 @@ def get_savgol_pdr_peaks(edf_file, ica = True, target_sf = 200, nfft=0.25):
     spectrum_df = pd.DataFrame(spectrum_data)
 
     return results_df, spectrum_df
+
+
+
+def calculate_median_psd(ch_np, sf, step_size_hz = 1.0):
+    """
+    Calculate the mean Power Spectral Density (PSD) for a given electrode across intervals\epochs.
+
+    Parameters:
+        ch_np (numpy.ndarray): EEG data of shape (num_intervals, num_samples).
+        sf (float): The sampling frequency.
+        step_size_hz (float): The desired step size in Hz.
+
+    Returns:
+        frequencies (numpy.ndarray): The frequencies.
+        median_psd (numpy.ndarray): The median PSD values.
+    """
+
+    # Calculate the number of samples corresponding to the desired step size
+    nperseg_samples = int(sf / step_size_hz)
+
+    # Choose a nperseg based on  desired step size
+    noverlap_samples =  nperseg_samples - 1  
+    
+    mean_psd_values = []
+    frequencies = None
+    num_intervals = ch_np.shape[0]
+    for interval_idx in range(num_intervals):
+        f, psd = sig.welch(ch_np[interval_idx], fs=sf, noverlap=noverlap_samples, nperseg=nperseg_samples)
+        frequencies = f  # Frequencies are the same for all intervals
+        mean_psd_values.append(psd)
+    
+    median_psd = np.median(mean_psd_values, axis=0)
+    
+    return frequencies, median_psd
 
 
 #Main function
