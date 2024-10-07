@@ -42,7 +42,7 @@ An example EEG deidentified file from a control patient in our cohort can be ret
 
 
 ### R Requirements:
-  [R](https://www.r-project.org/). These scripts use R version 4.4.0 with the following packages:
+  These scripts use [R](https://www.r-project.org/) version 4.4.0 with the following packages:
 1. [tidyverse](https://cran.r-project.org/web/packages/tidyverse/index.html)
 2. [hmisc](https://cran.r-project.org/web/packages/hmisc/index.html)
 3. [reticulate](https://cran.r-project.org/web/packages/reticulate/index.html)
@@ -57,7 +57,7 @@ An example EEG deidentified file from a control patient in our cohort can be ret
 ### Python Dependencies:
 These scripts use Python 3.9.13. The following third-party packages are required to run the Python scripts:
 1.  [scipy]([https://docs.scipy.org/doc/scipy/reference/signal.html](https://docs.scipy.org/doc/scipy/)
-2.  [pandas](https://pandas.pydata.org/docs/
+2.  [pandas](https://pandas.pydata.org/docs/)
 3.  [mne](https://mne.tools/stable/index.html)
 4.  [mne_icalabel](https://mne.tools/mne-icalabel/stable/index.html)
 
